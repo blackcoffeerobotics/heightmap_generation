@@ -1,0 +1,8 @@
+# image size should be a multiple of 2^n+1 (129,257,513....)
+size: 257
+
+# side length of the generated DEM (in m)       
+side_length: 8
+
+# max height of the DEM model
+max_height: 1
