@@ -53,13 +53,13 @@ model_template = """
 """
 
 
-def rescale_and_resize(img_name, img_size):
+def rescale_and_resize(img_name, img_size, img_out):
 
     # Open image
     img = Image.open(img_name)
-
+    img = ImageOps.grayscale(img)
     if invert:
-        img = ImageOps.grayscale(img)
+
         # img = ImageOps.invert(img)
 
         # Binary Thresholding in PIL
@@ -104,7 +104,7 @@ def rescale_and_resize(img_name, img_size):
     img = img.convert('L')
 
     # Save image
-    img.save(img_name)
+    img.save(img_out)
 
     img.close()
 
@@ -138,13 +138,14 @@ def world_creator():
 
 def write_heightmap_model(heightmap_path):
     global img_size, package_path
-    rescale_and_resize(heightmap_path, img_size)
 
-    config_template = read_template(package_path + "/config/templates/config.txt")
+    config_template = read_template(
+        package_path + "/config/templates/config.txt")
     write_config_file(config_template)
-    shutil.copyfile(heightmap_path, package_path +
-                    "/config/models/%s/%s.png" % (model_name, model_name))
 
+    img_out_path = package_path +\
+        "/config/models/%s/%s.png" % (model_name, model_name)
+    rescale_and_resize(heightmap_path, img_size, img_out_path)
     model_template = read_template(
         package_path + "/config/templates/heightmap_sdf.txt")
     write_sdf_file(model_template)
